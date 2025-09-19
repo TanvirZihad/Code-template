@@ -89,7 +89,6 @@ public:
 
 
 
-
 struct Edge {
     int to;
     int id;
@@ -99,6 +98,7 @@ class EulerianUndirected {
     vector<vector<Edge>> adj;
     vector<bool> used;
     vector<int> deg;
+    vector<int>cur;
 
 public:
     EulerianUndirected(int n, int m) {
@@ -107,6 +107,7 @@ public:
         adj.resize(n);
         used.resize(m, false);
         deg.resize(n, 0);
+        cur.resize(n,0);
     }
 
     void addEdge(int u, int v, int id) {
@@ -114,6 +115,7 @@ public:
         adj[v].push_back({u, id});
         deg[u]++;
         deg[v]++;
+       // cout<<id<<endl;
     }
 
     int getEulerType() {
@@ -128,50 +130,61 @@ public:
 
     void findEuler() {
         int type = getEulerType();
-        if (type == 0) {
-            cout << "No\n";
+        if (type == 0||type==1) {
+            cout << "IMPOSSIBLE\n";
             return;
         }
 
         int start = 0;
-        if (type == 1) {
-            for (int i = 0; i < V; ++i)
-                if (deg[i] % 2 != 0) {
-                    start = i;
-                    break;
-                }
-        } else {
-            for (int i = 0; i < V; ++i)
-                if (!adj[i].empty()) {
-                    start = i;
-                    break;
-                }
-        }
 
-        vector<int> path, edge_path;
-        dfs(start, path, edge_path);
+
+        vector<int> path;
+        dfs(start, path);
 
         if (path.size() != E + 1) {
-            cout << "No\n";
+            cout << "IMPOSSIBLE\n";
             return;
         }
-        reverse(path.begin(),path.end());
-        cout << "Yes\n";
-        for (int v : path) cout << v << " ";
+        for (int v : path) cout << v+1 << " ";
         cout << "\n";
-        for (int e : edge_path) cout << e << " ";
-        cout << "\n";
+        // for (int e : edge_path) cout << e << " ";
+        // cout << "\n";
     }
 
-    void dfs(int v, vector<int>& path, vector<int>& edge_path) {
-        for (auto e:adj[v]) {
-            
-            if (used[e.id]) continue;
-            used[e.id] = true;
-            dfs(e.to, path, edge_path);
-            edge_path.push_back(e.id);
-        }
-        path.push_back(v);
+    void dfs(int v, vector<int>& path) {
+       while(cur[v]<(int)adj[v].size()){
+        auto e=adj[v][cur[v]++];
+        if(used[e.id])continue;
+        used[e.id]=true;
+        dfs(e.to,path);
+       }
+       path.push_back(v);
     }
 };
 
+void solve(){
+
+    int n,m;
+    cin>>n>>m;
+    EulerianUndirected res(n,m);
+
+    for(int i=0;i<m;i++){
+        int u,v;
+        cin>>u>>v;
+        --u,--v;
+        res.addEdge(u,v,i);
+    }
+    res.findEuler();
+ //   cout<<1<<endl;
+    
+
+
+
+}
+
+signed main(){
+    int t=1;
+   // cin>>t;
+    while(t--)solve();
+   
+}
