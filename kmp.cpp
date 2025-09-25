@@ -124,3 +124,25 @@ int main()
     }
 
 */
+
+
+
+
+/*
+if current matched len is i and char c is inserted,what will be next matched len
+
+  for(int i=0;i<m;i++){
+     for(auto c='A';c<='Z';c++){
+      int j=c-'A';
+      int l=i;
+      if(s[l]==c)nxt[i][j]=l+1;
+      else{
+      while(l&&s[l]!=c)l=pi[l];
+      }
+      if(s[l]==c)nxt[i][j]=l+1;
+      else nxt[i][j]=0;
+     }
+  }
+
+
+*/
